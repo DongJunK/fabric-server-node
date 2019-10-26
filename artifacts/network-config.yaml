@@ -152,7 +152,7 @@ certificateAuthorities:
         # [Optional] The optional name of the CA.
         caName: ca-org0
 
-    ca-org2:
+    ca-org1:
         url: https://13.209.128.90:8054
         httpOptions:
             verify: false
