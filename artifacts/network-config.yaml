@@ -2,7 +2,7 @@ name: "balance-transfer"
 
 x-type: "hlfv1"
 
-dscriptiion: "Balance Transfer Network"
+description: "Balance Transfer Network"
 
 version: "1.0"
 
@@ -47,8 +47,6 @@ organizations:
         peers:
             - peer0.org0.example.com
             - peer1.org0.example.com
-        certificateAuthorities:
-            - ca-org0
 
         adminPrivateKey:
             path:artifacts/crypto-config/peerOrganizations/org0.example.com/users/Admin@org0.example.com/msp/keystore/26f05334fafcbf833264a1d7f418a70eca4082ccf712f1bca11736e32aaa2d2b_sk
@@ -62,9 +60,7 @@ organizations:
         peers:
             - peer2.org1.example.com
             - peer3.org1.example.com
-
-        certificateAuthorities:
-            - ca-org1
+        
         adminPrivateKey:
             path: artifacts/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/7932bdeb5c1cb47e1bb5cf6c7951ef4b57170d517d24194604b83747802638c8_sk
 
@@ -131,27 +127,4 @@ peers:
             ssl-target-name-override: peer3.org1.example.com
         tlsCACerts:
             path: artifacts/crypto-config/peerOrganizations/org1.example.com/peers/peer3.org1.example.com/tls/ca.crt
-
-certificateAuthorities:
-    ca-org0:
-        url: https://192.168.56.2:7054
-        
-        httpOptions:
-            verify: false
-        tlsCACerts:
-            path: artifacts/crypto-config/peerOrganizations/org0.example.com/ca/ca.org0.example.com-cert.pem
-        registrar:
-            - enrollId: admin
-              enrollSecret: adminpw
-    caName: ca-org0
-
-ca-org1:
-    url: https://192.168.56.12:7054
-    httpOptions:
-        verify: false
-    tlsCACerts:
-        path: artifacts/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
-    registrar:
-        - enrollId: admin
-          enrollSecret: adminpw
-    caName: ca-org1
+    

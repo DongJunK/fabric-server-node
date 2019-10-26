@@ -16,28 +16,24 @@
 var util = require('util');
 var helper = require('./helper.js');
 
+
 var queryChaincode = async function(peer, channelName, chaincodeName, args, fcn, username, orgname) {
 	let client = null;
 	let channel = null;
     let user_name = username;
     let org_name = orgname;
-    
-    if(!org_name)
-    {
-        org_name = 'Org0';
-	}
     try {
 		// first setup the client for this org
-	    client = await helper.getClientForOrg(org_name, user_name);
-        console.log('Successfully got the fabric client for the organization "%s"', org_name);
+		// dongjun : remove username at getClientForOrg function parameter
+	    client = await helper.getClientForOrg(org_name,user_name);
+		
+		//client.setAdminSigningIdentity(private_key, certificate, mspid);
+
+		console.log('Successfully got the fabric client for the organization "%s %s"', org_name, user_name);
+
+		
 		channel = client.getChannel(channelName);
         
-        /*
-        await channel.initialize({
-            discover: true
-        });
-        */
-
         if(!channel) {
 			let message = util.format('Channel %s was not defined in the connection profile', channelName);
 			console.error(message);
@@ -50,7 +46,9 @@ var queryChaincode = async function(peer, channelName, chaincodeName, args, fcn,
 			chaincodeId: chaincodeName,
 			fcn: fcn,
 			args: args,
+			txId: client.newTransactionID(true)
 		};
+
 		let response_payloads = await channel.queryByChaincode(request);
 		if (response_payloads) {
 			for (let i = 0; i < response_payloads.length; i++) {

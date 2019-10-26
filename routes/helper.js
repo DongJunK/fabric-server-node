@@ -5,8 +5,10 @@ const util = require('util');
 
 const hfc = require('fabric-client');
 
-async function getClientForOrg(userorg, username) {
+//dongjun : remove username at parameter
+async function getClientForOrg(userorg,username) {
 	// get a fabric client loaded with a connection profile for this org
+	console.log('getClientForOrg - ****** START %s %s', userorg, username);
 	let config = '-connection-profile-path';
 
 	//build a client context and load it with a connection profile
@@ -24,14 +26,14 @@ async function getClientForOrg(userorg, username) {
 	// this will create both the state store and the crypto store based
 	// on the settings in the client section of the connection profile
 	
-   // await client.initCredentialStores();
-
+    await client.initCredentialStores();
+	
 	// The getUserContext call tries to get the user from persistence.
 	// If the user has been saved to persistence then that means the user has
 	// been registered and enrolled. If the user is found in persistence
 	// the call will then assign the user to the client object.
 	
-    /*
+    
     if(username) {
 		let user = await client.getUserContext(username, true);
 		if(!user){
@@ -40,28 +42,36 @@ async function getClientForOrg(userorg, username) {
 			console.log('User %s was found to be registered and enrolled %s \n', username);
 		}
 	}
-    
-	console.log('getClientForOrg - ****** END %s %s \n\n', userorg, username);
-    */
+	
+	//remove username at console.log 
+	console.log('getClientForOrg - ****** END %s %s\n\n', username, userorg);
     
 
 	return client;
 }
 
+// dongjun : Functions Based on CA
 var getRegisteredUser = async function(username, userOrg, isJson) {
+	
 	try {
+		
 		var client = await getClientForOrg(userOrg);
+
 		console.log('Successfully initialized the credential stores');
 		// client can now act as an agent for organization Org1
 		// first check to see if the user is already enrolled
+		
 		var user = await client.getUserContext(username, true);
+		
 		if (user && user.isEnrolled()) {
 			console.log('Successfully loaded member from persistence');
 		} else {
 			// user was not enrolled, so we will need an admin user object to register
 			console.log('User %s was not enrolled, so we will need an admin user object to register',username);
 			var admins = hfc.getConfigSetting('admins');
+			console.log(admins);
 			let adminUserObj = await client.setUserContext({username: admins[0].username, password: admins[0].secret});
+			console.log(adminUserObj);
 			let caClient = client.getCertificateAuthority();
 			let secret = await caClient.register({
 				enrollmentID: username,
@@ -72,7 +82,7 @@ var getRegisteredUser = async function(username, userOrg, isJson) {
 			console.log('Successfully enrolled username %s  and setUserContext on the client object', username);
 		}
 		if(user && user.isEnrolled) {
-			if(user && user.isEnrolled) {
+			if(isJson && isJson == true) {
 				var response = {
                     success: true,
 					secret: user._enrollmentSecret,

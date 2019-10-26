@@ -9,7 +9,7 @@ router.get('/channels/:channelName/chaincodes/:chaincodeName', async function(re
 	let args = req.query.args;
 	let fcn = req.query.fcn;
 	let peer = req.query.peer;
-
+	
 
 	if(!chaincodeName) {
 		res.json(getErrorMessage('\'chaincodeName\''));
@@ -33,7 +33,7 @@ router.get('/channels/:channelName/chaincodes/:chaincodeName', async function(re
 
 	let message = await query.queryChaincode(peer, channelName, chaincodeName, args, fcn, req.username, req.orgname);
 	res.send(message);
-
+	
 });
 
 /* POST buy ticket */
