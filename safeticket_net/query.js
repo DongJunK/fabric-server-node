@@ -15,13 +15,16 @@
  */
 var util = require('util');
 var helper = require('./helper.js');
-
+var config = require('./config.json');
 
 var queryChaincode = async function(peer, args, fcn, username, orgname) {
 	let client = null;
-	let channel = null;
+	let channelName = config.channel;
+	let chaincodeName = config.chaincode;
     let user_name = username;
-    let org_name = orgname;
+	let org_name = orgname;
+	console.log(channelName);
+	console.log(chaincodeName);
     try {
 		// first setup the client for this org
 		// dongjun : remove username at getClientForOrg function parameter
