@@ -1,24 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const query = require('./query.js');
+const query = require('../safeticket_net/query.js');
+
 
 /* GET users listing. */
-router.get('/channels/:channelName/chaincodes/:chaincodeName', async function(req, res) {
-	var channelName = req.params.channelName;
-	var chaincodeName = req.params.chaincodeName;
+router.get('/', async function(req, res) {
 	let args = req.query.args;
 	let fcn = req.query.fcn;
 	let peer = req.query.peer;
 	
-
-	if(!chaincodeName) {
-		res.json(getErrorMessage('\'chaincodeName\''));
-		return;
-	}
-	if(!channelName) {
-		res.json(getErrorMessage('\'channelName\''));
-		return;
-	}
 	if(!fcn) {
 		res.json(getErrorMessage('\'fcn\''));
 		return;
@@ -31,7 +21,7 @@ router.get('/channels/:channelName/chaincodes/:chaincodeName', async function(re
 	args = JSON.parse(args);
 
 
-	let message = await query.queryChaincode(peer, channelName, chaincodeName, args, fcn, req.username, req.orgname);
+	let message = await query.queryChaincode(peer, args, fcn, req.username, req.orgname);
 	res.send(message);
 	
 });
@@ -49,8 +39,6 @@ router.post('/channels/:channelName/chaincodes/:chaincodeName', async function(r
     console.log('fcn  : ' + fcn);
     console.log('args  : ' + args);
     
-
-
 });
 
 /* PUT modify ticket info */

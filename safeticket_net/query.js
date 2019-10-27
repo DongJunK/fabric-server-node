@@ -17,7 +17,7 @@ var util = require('util');
 var helper = require('./helper.js');
 
 
-var queryChaincode = async function(peer, channelName, chaincodeName, args, fcn, username, orgname) {
+var queryChaincode = async function(peer, args, fcn, username, orgname) {
 	let client = null;
 	let channel = null;
     let user_name = username;
@@ -45,8 +45,7 @@ var queryChaincode = async function(peer, channelName, chaincodeName, args, fcn,
 			targets : [peer], //queryByChaincode allows for multiple targets
 			chaincodeId: chaincodeName,
 			fcn: fcn,
-			args: args,
-			txId: client.newTransactionID(true)
+			args: args
 		};
 
 		let response_payloads = await channel.queryByChaincode(request);

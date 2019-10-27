@@ -12,7 +12,7 @@ var cors = require('cors');
 require('./config.js');
 
 var hfc = require('fabric-client');
-var helper = require('./routes/helper.js');
+var helper = require('./safeticket_net/helper.js');
 var indexRouter = require('./routes/index');
 var ticketRouter = require('./routes/ticket');
 

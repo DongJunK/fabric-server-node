@@ -10,7 +10,7 @@ client:
     organization: Org0
 
     credentialStore:
-        path: "./faric-client-kv-org0"
+        path: "./fabric-client-kv-org0"
 
         cryptoStore:
             path: "/tmp/fabric-client-kv-org0"
