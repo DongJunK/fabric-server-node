@@ -16,17 +16,21 @@
 'use strict';
 const util = require('util');
 const helper = require('./helper.js');
+const config = require('./config.json');
 
-const invokeChaincode = async function(peerNames, channelName, chaincodeName, fcn, args, username, org_name) {
-	console.log(util.format('\n============ invoke transaction on channel %s ============\n', channelName));
+const invokeChaincode = async function(peerNames, fcn, args, username, orgname) {
+	
 	let error_message = null;
 	let tx_id_string = null;
 	let client = null;
 	let channel = null;
+	let channelName = config.channel;
+	let chaincodeName = config.chaincode;
+	console.log(util.format('\n============ invoke transaction on channel %s ============\n', channelName));
 	try {
 		// first setup the client for this org
-		client = await helper.getClientForOrg(org_name, username);
-		console.log('Successfully got the fabric client for the organization "%s"', org_name);
+		client = await helper.getClientForOrg(orgname, username);
+		console.log('Successfully got the fabric client for the organization "%s"', orgname);
 		channel = client.getChannel(channelName);
 		if(!channel) {
 			let message = util.format('Channel %s was not defined in the connection profile', channelName);
@@ -54,7 +58,6 @@ const invokeChaincode = async function(peerNames, channelName, chaincodeName, fc
 		// later when we send a transaction to the orderer
 		const proposalResponses = results[0];
 		const proposal = results[1];
-
 		// look at the responses to see if they are all are good
 		// response will also include signatures required to be committed
 		let all_good = true;
@@ -71,7 +74,6 @@ const invokeChaincode = async function(peerNames, channelName, chaincodeName, fc
 				console.error(error_message);
 			}
 		}
-
 		if (all_good) {
 			console.log(util.format(
 				'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s", metadata - "%s", endorsement signature: %s',
@@ -119,6 +121,7 @@ const invokeChaincode = async function(peerNames, channelName, chaincodeName, fc
 				});
 				promises.push(invokeEventPromise);
 			});
+			
 
 			const orderer_request = {
 				txId: tx_id,
@@ -126,10 +129,12 @@ const invokeChaincode = async function(peerNames, channelName, chaincodeName, fc
 				proposal: proposal
 			};
 			const sendPromise = channel.sendTransaction(orderer_request);
+			
 			// put the send to the orderer last so that the events get registered and
 			// are ready for the orderering and committing
 			promises.push(sendPromise);
 			let results = await Promise.all(promises);
+
 			console.log(util.format('------->>> R E S P O N S E : %j', results));
 			let response = results.pop(); //  orderer results are last in the results
 			if (response.status === 'SUCCESS') {
@@ -138,7 +143,6 @@ const invokeChaincode = async function(peerNames, channelName, chaincodeName, fc
 				error_message = util.format('Failed to order the transaction. Error code: %s',response.status);
 				console.log(error_message);
 			}
-
 			// now see what each of the event hubs reported
 			for(let i in results) {
 				let event_hub_result = results[i];
@@ -164,7 +168,7 @@ const invokeChaincode = async function(peerNames, channelName, chaincodeName, fc
 	let success = true;
 	let message = util.format(
 		'Successfully invoked the chaincode %s to the channel \'%s\' for transaction ID: %s',
-		org_name, channelName, tx_id_string);
+		orgname, channelName, tx_id_string);
 	if (error_message) {
 		message = util.format('Failed to invoke chaincode. cause:%s',error_message);
 		success = false;

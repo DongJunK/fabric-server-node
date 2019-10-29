@@ -7,7 +7,7 @@ description: "Balance Transfer Network"
 version: "1.0"
 
 channels:
-    mychannel:
+    ch1:
         orderers:
             - orderer0.example.com
             - orderer1.example.com
@@ -38,7 +38,7 @@ channels:
                 eventSource: false
 
         chaincodes:
-            - mycc:v0
+            - testnetCC:v0
 
 organizations:
     Org0:

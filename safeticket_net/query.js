@@ -19,6 +19,7 @@ var config = require('./config.json');
 
 var queryChaincode = async function(peer, args, fcn, username, orgname) {
 	let client = null;
+	let channel = null;
 	let channelName = config.channel;
 	let chaincodeName = config.chaincode;
     let user_name = username;

@@ -1,6 +1,6 @@
 {
 	"channel": "ch1",
-	"chaincode": "mycc",
+	"chaincode": "testnetCC",
 	"org0peer":"peer0.org0.example.com",
 	"org1peer":"peer0.org1.example.com"
 }

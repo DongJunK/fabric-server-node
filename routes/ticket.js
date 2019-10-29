@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const query = require('../safeticket_net/query.js');
+const invoke = require('../safeticket_net/invoke.js');
 
 
 /* GET users listing. */
@@ -27,18 +28,27 @@ router.get('/', async function(req, res) {
 });
 
 /* POST buy ticket */
-router.post('/channels/:channelName/chaincodes/:chaincodeName', async function(req, res) {
+router.post('/', async function(req, res) {
     console.log('==================== INVOKE ON CHAINCODE ==================');
-    var peers = req.body.peers;
-    var chaincodeName = req.params.chaincodeName;
-    var channelName = req.params.channelName;
+    var peer = req.body.peer;
     var fcn = req.body.fcn;
-    var args = req.body.args;
-    console.log('channelName  : ' + channelName);
-    console.log('chaincodeName : ' + chaincodeName);
-    console.log('fcn  : ' + fcn);
-    console.log('args  : ' + args);
-    
+	var args = req.body.args;
+	
+	console.log("peers = ",peer);
+	console.log("fcn = ",fcn);
+	console.log("args = ",args);
+
+	if (!fcn) {
+		res.json(getErrorMessage('\'fcn\''));
+		return;
+	}
+	if (!args) {
+		res.json(getErrorMessage('\'args\''));
+		return;
+	}
+	
+	let message = await invoke.invokeChaincode(peer,fcn,args, req.body.username, req.body.orgname);
+    res.send(message);
 });
 
 /* PUT modify ticket info */

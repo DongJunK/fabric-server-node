@@ -27,10 +27,12 @@ var app = express();
 app.options('*', cors());
 app.use(cors());
 //support parsing of application/json type post data
-app.use(bodyParser.json());
+
+app.use(bodyParser.json({limit: '50mb'}));
 //support parsing of application/x-www-form-urlencoded post data
+
 app.use(bodyParser.urlencoded({
-	extended: false
+	limit: '50mb', extended: true
 }));
 
 // set secret variable
