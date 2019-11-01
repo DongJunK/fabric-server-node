@@ -103,7 +103,7 @@ orderers:
 
 peers:
     peer0.org0.example.com:
-        url: grpc://15.164.140.245:7051
+        url: grpcs://15.164.140.245:7051
 
         grpcOptions:
             ssl-target-name-override: peer0.org0.example.com
@@ -111,7 +111,7 @@ peers:
             path: artifacts/crypto-config/peerOrganizations/org0.example.com/peers/peer0.org0.example.com/tls/ca.crt
 
     peer1.org0.example.com:
-        url: grpc://13.209.61.41:7051
+        url: grpcs://13.209.61.41:7051
 
         grpcOptions:
             ssl-target-name-override: peer1.org0.example.com
@@ -119,7 +119,7 @@ peers:
             path: artifacts/crypto-config/peerOrganizations/org0.example.com/peers/peer1.org0.example.com/tls/ca.crt
 
     peer0.org1.example.com:
-        url: grpc://15.164.153.125:7051
+        url: grpcs://15.164.153.125:7051
         
         grpcOptions:
             ssl-target-name-override: peer0.org1.example.com
@@ -127,7 +127,7 @@ peers:
             path: crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 
     peer1.org1.example.com:
-        url: grpc://15.164.121.13:7051
+        url: grpcs://15.164.121.13:7051
 
         grpcOptions:
             ssl-target-name-override: peer1.org1.example.com

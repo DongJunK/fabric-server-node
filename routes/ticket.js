@@ -1,8 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const query = require('../safeticket_net/query.js');
-const invoke = require('../safeticket_net/invoke.js');
-
+var express = require('express');
+var query = require('../safeticket_net/query');
+var invoke = require('../safeticket_net/invoke');
+var router = express.Router();
 
 /* GET users listing. */
 router.get('/', async function(req, res) {
@@ -49,15 +48,6 @@ router.post('/', async function(req, res) {
 	
 	let message = await invoke.invokeChaincode(peer,fcn,args, req.body.username, req.body.orgname);
     res.send(message);
-});
-
-/* PUT modify ticket info */
-router.put('/', (req, res, next)=> {
-    res.send('ModifyTicket');
-
-	    /*
-		    send to Blockchain Network using Fabric-sdk
-		*/
 });
 
 /* PUT delete ticket */

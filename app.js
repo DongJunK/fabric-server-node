@@ -10,15 +10,35 @@ var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var bearerToken = require('express-bearer-token');
 var cors = require('cors');
+//var session = require('express-session');
 
+//const { sequelize } = require('./models');
+
+//const passport = require('passport');
+
+//const passportConfig = require('./passport');
+//passportConfig(passport);
 require('./config.js');
-
+require('dotenv').config();
+//blockhcian
 var hfc = require('fabric-client');
 var helper = require('./safeticket_net/helper.js');
-var indexRouter = require('./routes/index');
-var ticketRouter = require('./routes/ticket');
+
+
+//var indexRouter = require('./routes/index');
+//var webTicketRouter = require('./routes/web/ticket');
+//var domoRouter = require('./routes/web/demo');
+//var apiRouter = require('./routes/web/api');
+
+
+//var usersRouter = require('./routes/users');
+var TicketRouter = require('./routes/ticket');
+
+
 
 var app = express();
+sequelize.sync();
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////// SET CONFIGURATONS ////////////////////////////
@@ -43,12 +63,14 @@ app.use(expressJWT({
 	path: ['/users']
 }));
 app.use(bearerToken());
+
 app.use(function(req, res, next) {
-	console.log(' ------>>>>>> new request for %s',req.originalUrl);
+  console.log(' ------>>>>>> new request for %s',req.originalUrl);
+  
 	if (req.originalUrl.indexOf('/users') >= 0) {
 		return next();
 	}
-	var token = req.token;
+  var token = req.token;
 	jwt.verify(token, app.get('secret'), function(err, decoded) {
 		if (err) {
 			res.send({
@@ -59,6 +81,7 @@ app.use(function(req, res, next) {
 			});
 			return;
 		} else {
+      
 			// add the decoded user name and org name to the request object
 			// for the downstream code to use
 			req.username = decoded.username;
@@ -76,11 +99,28 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_SECRET));
+/*
+app.use(session({
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.COOKIE_SECRET,
+  cookie:{
+    httpOnly: true,
+    secure: false,
+  }
+}));
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+*/
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/ticket', ticketRouter);
+//app.use('/', indexRouter);
+
+app.use('/ticket',TicketRouter);
 
 // Register and enroll user
 app.post('/users',async function(req, res) {
