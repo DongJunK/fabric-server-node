@@ -27,8 +27,6 @@ router.post('/', async function(req, res) {
                     res.send({result:false,msg:err});
                 });
             }
-            
-
         } else {
             res.send({result:false,msg:'not exist'});
         }

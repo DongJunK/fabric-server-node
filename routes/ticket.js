@@ -1,5 +1,4 @@
 var express = require('express');
-var query = require('../safeticket_net/query');
 var invoke = require('../safeticket_net/invoke');
 var router = express.Router();
 
@@ -20,7 +19,7 @@ router.get('/', async function(req, res) {
 	args = args.replace(/'/g, '"');
 	args = JSON.parse(args);
 	
-	let message = await query.queryChaincode(peer, args, fcn);
+	let message = await invoke.invokeChaincode(peer, args, fcn);
 	res.send(message);
 });
 
