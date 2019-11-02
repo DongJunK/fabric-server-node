@@ -14,12 +14,7 @@ if (config.use_env_variable) {
 
 db.Ticket_platform = require('./ticket_platform')(sequelize,Sequelize);
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
-
 db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
 module.exports = db;

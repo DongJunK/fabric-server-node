@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "bcrypt": "^3.0.6",
@@ -27,6 +27,7 @@
     "log4js": "^5.1.0",
     "morgan": "^1.9.1",
     "mysql2": "^2.0.0",
+    "node-mysql": "^0.4.2",
     "os": "^0.1.1",
     "passport": "^0.4.0",
     "passport-kakao": "^1.0.0",

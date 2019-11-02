@@ -4,15 +4,15 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+
 var util = require('util');
 
-var expressJWT = require('express-jwt');
-var jwt = require('jsonwebtoken');
-var bearerToken = require('express-bearer-token');
+//var expressJWT = require('express-jwt');
+//var jwt = require('jsonwebtoken');
+//var bearerToken = require('express-bearer-token');
 var cors = require('cors');
-//var session = require('express-session');
 
-//const { sequelize } = require('./models');
+const { sequelize } = require('./models');
 
 //const passport = require('passport');
 
@@ -20,25 +20,21 @@ var cors = require('cors');
 //passportConfig(passport);
 require('./config.js');
 require('dotenv').config();
+
+/*
 //blockhcian
 var hfc = require('fabric-client');
 var helper = require('./safeticket_net/helper.js');
+*/
 
-
-//var indexRouter = require('./routes/index');
-//var webTicketRouter = require('./routes/web/ticket');
-//var domoRouter = require('./routes/web/demo');
-//var apiRouter = require('./routes/web/api');
-
-
-//var usersRouter = require('./routes/users');
-var TicketRouter = require('./routes/ticket');
-
+var indexRouter = require('./routes/index');
+var ticketRouter = require('./routes/ticket');
+var tokenRouter = require('./routes/token');
+//var UserRouter = require('./routes/users');
 
 
 var app = express();
 sequelize.sync();
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////// SET CONFIGURATONS ////////////////////////////
@@ -55,6 +51,7 @@ app.use(bodyParser.urlencoded({
 	limit: '50mb', extended: true
 }));
 
+/*
 // set secret variable
 app.set('secret', 'thisismysecret');
 app.use(expressJWT({
@@ -63,7 +60,8 @@ app.use(expressJWT({
 	path: ['/users']
 }));
 app.use(bearerToken());
-
+*/
+/*
 app.use(function(req, res, next) {
   console.log(' ------>>>>>> new request for %s',req.originalUrl);
   
@@ -91,6 +89,7 @@ app.use(function(req, res, next) {
 		}
 	});
 });
+*/
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -118,10 +117,14 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use('/', indexRouter);
+app.use('/', indexRouter);
+app.use('/ticket',ticketRouter);
+app.use('/token',tokenRouter);
+//app.use('/users',UserRouter);
 
-app.use('/ticket',TicketRouter);
 
+//create token
+/*
 // Register and enroll user
 app.post('/users',async function(req, res) {
   var username = req.body.username;
@@ -137,7 +140,7 @@ app.post('/users',async function(req, res) {
     res.json(getErrorMessage('\'orgName\''));
     return;
   }
-
+  
   var token = jwt.sign({
     exp: Math.floor(Date.now() / 1000) + parseInt(hfc.getConfigSetting('jwt_expiretime')),
     username: username,
@@ -155,6 +158,8 @@ app.post('/users',async function(req, res) {
     res.json({success: false, message: response});
   }
 });
+*/
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

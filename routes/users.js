@@ -1,22 +1,24 @@
 var express = require('express');
+var os = require('os');
 var router = express.Router();
 
 const bcrypt = require('bcrypt');
-const { User } = require('../models');
+const { Ticket_platform } = require('../models');
 
 
 
 
 /* User Join : /app/users/join */
 router.post('/join',async function(req, res) {
-    const { email, password, name, phone_num} = req.body;
+    const { token } = req.body;
+    
     try{
-        const exUser = await User.findOne({where: {email}});
+        const exUser = await Ticket_platform.findOne({where: { token }});
         if(exUser){
             res.send({result:false});
         } 
         console.time('암호화시간');
-        const hash = await bcrypt.hash(password, 12);
+        const hash = await bcrypt.hash(token, 12);
         console.timeEnd('암호화시간');
 
         await User.create({
@@ -35,20 +37,11 @@ router.post('/join',async function(req, res) {
 
 router.post('/login',async (req,res)=>{ // req.body.email, req.body.password
     try{
-        var email = req.body.email;
-        var password = req.body.password;
-        const exUser = await User.findOne({ where:{email}});
-        if(exUser){
-            // 비밀번호 검사
-            const result = await bcrypt.compare(password, exUser.password);
-            if(result){
-                res.send({result:true,msg:'로그인되었습니다.'});
-            } else {
-                res.send({result:false, msg:'이메일-비밀번호 조합이 맞지 않습니다.'});
-            }
-        }else {
-            res.send({result:false, msg: '이메일-비밀번호 조합이 맞지 않습니다.'});
-        }
+        var name = req.body.name;
+        const exUser = await Ticket_platform.findOne({ where:{ name }});
+        console.log(exUser);
+        //const result = await bcrypt.compare(password, exUser.password);
+        res.send(exUser);
     }catch(error){
         console.error(error);
         res.send({reuslt:false,msg:error});

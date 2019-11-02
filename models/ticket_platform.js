@@ -1,20 +1,22 @@
-module.exports = (squelize, DataTypes)=>{
-    return squelize.define('ticket_platform',{
+module.exports = (sequelize, DataTypes)=>{
+    return sequelize.define('ticket_platform',{
         name:{
             type: DataTypes.STRING(40),
             allowNull: false,
             unique: true
         }, 
         contract_date:{
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: true
         },
         token:{
-            type: DataTypes.STRING(50),
+            type: DataTypes.STRING(100),
             allowNull: true
         }
     },{
-        underscored: true
+        underscored: true,
+        timestamps: false,
+        freezeTableName: true
     });
 };
 

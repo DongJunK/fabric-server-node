@@ -3,12 +3,12 @@ var query = require('../safeticket_net/query');
 var invoke = require('../safeticket_net/invoke');
 var router = express.Router();
 
-/* GET users listing. */
+
+/* GET ticket query. */
 router.get('/', async function(req, res) {
 	let args = req.query.args;
 	let fcn = req.query.fcn;
 	let peer = req.query.peer;
-	
 	if(!fcn) {
 		res.json(getErrorMessage('\'fcn\''));
 		return;
@@ -19,16 +19,13 @@ router.get('/', async function(req, res) {
 	}
 	args = args.replace(/'/g, '"');
 	args = JSON.parse(args);
-
-
-	let message = await query.queryChaincode(peer, args, fcn, req.username, req.orgname);
-	res.send(message);
 	
+	let message = await query.queryChaincode(peer, args, fcn);
+	res.send(message);
 });
 
-/* POST buy ticket */
+/* POST ticket query, invoke */
 router.post('/', async function(req, res) {
-    console.log('==================== INVOKE ON CHAINCODE ==================');
     var peer = req.body.peer;
     var fcn = req.body.fcn;
 	var args = req.body.args;
@@ -46,17 +43,9 @@ router.post('/', async function(req, res) {
 		return;
 	}
 	
-	let message = await invoke.invokeChaincode(peer,fcn,args, req.body.username, req.body.orgname);
+	let message = await invoke.invokeChaincode(peer,fcn,args);
     res.send(message);
 });
 
-/* PUT delete ticket */
-router.delete('/',(req, res, next) =>{
-	res.send('DeleteTicket');
-
-	/*
-		send to Blockchain Network using Fabric-sdk
-	*/
-});
 
 module.exports = router;
