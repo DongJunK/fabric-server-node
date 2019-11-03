@@ -12,7 +12,7 @@ router.get('/info', async function (req, res) { // ticket_no
 	let args = "[\"" + ticket_code + "\"]";
 	let fcn = "queryOneTicket";
 	if (!ticket_code) {
-		res.json(getErrorMessage('\'ticket_no\''));
+		res.send({ result:false, msg: 'Not exist request query ticket_code' });
 		return;
 	}
 	try {
@@ -27,16 +27,12 @@ router.get('/info', async function (req, res) { // ticket_no
 });
 
 /* GET Inquiry ticket list of one user. */
-router.get('/list?id=id', async function (req, res) {
-	let id = req.query.id;
-	let args = "[\"" + id + "\"]";
+router.get('/list', async function (req, res) {
+	let attendee_id = req.query.attendee_id;
+	let args = "[\"" + attendee_id + "\"]";
 	let fcn = "queryUserTickets";
-	if (!id) {
-		res.json(getErrorMessage('\'id\''));
-		return;
-	}
-	if (!fcn) {
-		res.json(getErrorMessage('\'fcn\''));
+	if (!attendee_id) {
+		res.send({ result:false, msg: 'Not exist request query attendee_id' });
 		return;
 	}
 	try {
