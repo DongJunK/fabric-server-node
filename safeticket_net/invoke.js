@@ -18,12 +18,13 @@ const util = require('util');
 const helper = require('./helper.js');
 const config = require('./config.json');
 
-const invokeChaincode = async function(peerNames, fcn, args) {
+const invokeChaincode = async function(fcn, args) {
 	
 	let error_message = null;
 	let tx_id_string = null;
 	let client = null;
 	let channel = null;
+	let peerNames = config.org0peer;
 	let channelName = config.channel;
 	let chaincodeName = config.chaincode;
 	let userName = config.reqUserName;

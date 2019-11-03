@@ -2,49 +2,166 @@ var express = require('express');
 var invoke = require('../safeticket_net/invoke');
 var router = express.Router();
 
+const bcrypt = require('bcrypt');
+const { Ticket_platform } = require('../models');
 
-/* GET ticket query. */
-router.get('/', async function(req, res) {
-	let args = req.query.args;
-	let fcn = req.query.fcn;
-	let peer = req.query.peer;
-	if(!fcn) {
-		res.json(getErrorMessage('\'fcn\''));
+/* GET Inquiry one ticket info. */
+router.get('/info', async function (req, res) { // ticket_no
+	let ticket_code = req.query.ticket_code;
+
+	let args = "[\"" + ticket_code + "\"]";
+	let fcn = "queryOneTicket";
+	if (!ticket_code) {
+		res.json(getErrorMessage('\'ticket_no\''));
 		return;
 	}
-	if(!args) {
-		res.json(getErrorMessage('\'args\''));
-		return;
+	try {
+		let message = await invoke.invokeChaincode(args, fcn);
+		console.log(message);
+		res.send({ result: true, info: message, msg: 'Success get info' });
+	} catch (err) {
+		console.error(err);
+		res.send({ result:false, info:'', msg:err });
 	}
-	args = args.replace(/'/g, '"');
-	args = JSON.parse(args);
-	
-	let message = await invoke.invokeChaincode(peer, args, fcn);
-	res.send(message);
+
 });
 
-/* POST ticket query, invoke */
-router.post('/', async function(req, res) {
-    var peer = req.body.peer;
-    var fcn = req.body.fcn;
-	var args = req.body.args;
-	
-	console.log("peers = ",peer);
-	console.log("fcn = ",fcn);
-	console.log("args = ",args);
-
+/* GET Inquiry ticket list of one user. */
+router.get('/list?id=id', async function (req, res) {
+	let id = req.query.id;
+	let args = "[\"" + id + "\"]";
+	let fcn = "queryUserTickets";
+	if (!id) {
+		res.json(getErrorMessage('\'id\''));
+		return;
+	}
 	if (!fcn) {
 		res.json(getErrorMessage('\'fcn\''));
 		return;
 	}
-	if (!args) {
-		res.json(getErrorMessage('\'args\''));
-		return;
+	try {
+		let message = await invoke.invokeChaincode(peer, args, fcn);
+		console.log(message);
+		res.send({ result: true, list: message, msg: 'Success get list' });
+	} catch (err) {
+		console.error(err);
+		res.send({ result:false, list:'', msg:err });
 	}
-	
-	let message = await invoke.invokeChaincode(peer,fcn,args);
-    res.send(message);
+
 });
 
+/* POST buy ticket  */
+router.post('/', async function (req, res) {
+	const token = req.header.authorization; // ticket sales platform authorization token
+	const venue = req.body.venue; // ticket event venue
+	const event_date = req.body.event_date; // ticket event date
+	const event_time = req.body.event_time; // ticket event time
+	const ticket_issuer = req.body.ticket_issuer; // Ticket sales platform name
+	const payment_time = req.body.payment_time; // ticket payment time
+	const event_name = req.body.event_name; // event_name of Purchased Ticket
+	const attendee_id = req.body.attendee_id; // saficket user id
+	const ticket_code = attendee_id + event_name + payment_time; // generate ticket code
+
+	const fcn = "createNewTicket"; // blockchain buy ticket function name
+	const args = "[\"" + ticket_code + "\",\"" + attendee_id + "\",\"" + event_name + "\",\"" + venue + "\",\"" + event_date + "\",\"" + event_time + "\",\"" + ticket_issuer + "\"]"; // buy ticket request arguments
+
+	try {
+		if (!token) {
+			res.send({ result:false, msg: 'Not exist request header authorization' });
+			return;
+		}
+
+		//Whether exist token
+		const ticket_platform = await Ticket_platform.findOne({ where: { token: token } });
+
+		if (!ticket_platform) {
+			res.send({ result:false, msg: 'Invalid Token' });
+			return;
+		}
+		if (!venue) {
+			res.send({ result:false, msg: 'Not exist request body venue' });
+			return;
+		}
+		if (!event_date) {
+			res.send({ result:false, msg: 'Not exist request body event_date' });
+			return;
+		}
+		if (!event_time) {
+			res.send({ result:false, msg: 'Not exist request body event_time' });
+			return;
+		}
+		if (!ticket_issuer) {
+			res.send({ result:false, msg: 'Not exist request body ticket_issuer' });
+			return;
+		}
+		if (!payment_time) {
+			res.send({ result:false, msg: 'Not exist request body payment_time' });
+			return;
+		}
+		if (!event_name) {
+			res.send({ result:false, msg: 'Not exist request body event_name' });
+			return;
+		}
+		if (!attendee_id) {
+			res.send({ result:false, msg: 'Not exist request body attendee_id' });
+			return;
+		}
+
+		let message = await invoke.invokeChaincode(peer, fcn, args);
+		var result = Buffer.alloc(11, message, 'base64'); // byte to string
+		console.log(message, result);
+		res.send({ result: result == "true", msg: 'Success buy ticket' }); // result string to boolean 
+	} catch (err) {
+		console.error(err);
+		res.send({ result:false, msg: err });
+	}
+
+});
+
+/* DELETE ticket at blockchain*/
+router.post('/deletion', async function (req, res) {
+	let token = req.headers.authorization; // ticket sales platform authorization token
+	let payment_time = req.body.payment_time; // ticket payment time
+	let event_name = req.body.event_name; // event_name of Purchased Ticket
+	let attendee_id = req.body.attendee_id; // saficket user id
+	let ticket_code = attendee_id + event_name + payment_time; // generate ticket code
+	let args = "[\"" + ticket_code + "\"]";
+	let fcn = "deleteTicket";
+	try {
+		if(!token){
+			res.send({ result:false, msg: 'Not exist request header authorization' });
+			return;
+		}
+		//Whether exist token
+		const ticket_platform = await Ticket_platform.findOne({ where: { token: token } });
+
+		if (!ticket_platform) {
+			res.send({ result:false, msg: 'Invalid Token' });
+			return;
+		}
+
+		if(!payment_time) {
+			res.send({ result:false, msg: 'Not exist request body payment_time' });
+			return;
+		}
+		if(!event_name) {
+			res.send({ result:false, msg: 'Not exist request body event_name' });
+			return;
+		}
+		if(!attendee_id) {
+			res.send({ result:false, msg: 'Not exist request body attendee_id' });
+			return;
+		}
+
+
+		let message = await invoke.invokeChaincode(args, fcn);
+		var result = Buffer.alloc(11, message, 'base64'); // byte to string
+		console.log(message, result);
+		res.send({ result: result == "true", msg: 'Success delete ticket' }); // result string to boolean 
+	} catch (err) {
+		console.error(err);
+		res.send({ result:false, msg: err });
+	}
+});
 
 module.exports = router;

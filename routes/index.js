@@ -19,10 +19,3 @@ router.get('/qrcode', function(req, res) {
 });
 
 module.exports = router;
-
-
-/*
-
-"ticket_no”, “attendee_id”, “event_id”, “venue”, “event_date”, “event_time”, “ticket_issuer"
-
-*/
