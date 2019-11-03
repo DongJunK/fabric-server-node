@@ -30,7 +30,7 @@ var helper = require('./safeticket_net/helper.js');
 var indexRouter = require('./routes/index');
 var ticketRouter = require('./routes/ticket');
 var tokenRouter = require('./routes/token');
-//var UserRouter = require('./routes/users');
+var userRouter = require('./routes/users');
 
 
 var app = express();
@@ -120,7 +120,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/ticket',ticketRouter);
 app.use('/token',tokenRouter);
-//app.use('/users',UserRouter);
+app.use('/users',userRouter);
 
 
 //create token

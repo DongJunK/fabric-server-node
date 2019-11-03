@@ -6,7 +6,7 @@ var router = express.Router();
 const { Ticket_platform } = require('../models');
 
 /* GET Inquiry one ticket info. */
-router.get('/info', async function (req, res) { // ticket_no
+router.get('/info', async function (req, res) { // ticket_code
 	let ticket_code = req.query.ticket_code;
 	let args = [ticket_code];
 	let fcn = "queryOneTicket";
@@ -119,7 +119,7 @@ router.post('/', async function (req, res) {
 			res.send({ result:false, msg: 'Not exist request body attendee_id' });
 			return;
 		}
-
+		console.log(args);
 		let message = await invoke.invokeChaincode(args,fcn);
 		res.send({ result: message.success, msg: 'Success buy ticket' }); // result string to boolean 
 	} catch (err) {

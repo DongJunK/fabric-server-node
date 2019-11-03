@@ -13,6 +13,7 @@ if (config.use_env_variable) {
 }
 
 db.Ticket_platform = require('./ticket_platform')(sequelize,Sequelize);
+db.User = require('./user')(sequelize,Sequelize);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
