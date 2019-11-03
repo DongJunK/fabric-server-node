@@ -18,7 +18,7 @@ const util = require('util');
 const helper = require('./helper.js');
 const config = require('./config.json');
 
-const invokeChaincode = async function(fcn, args) {
+const invokeChaincode = async function(args, fcn) {
 	
 	let error_message = null;
 	let tx_id_string = null;
@@ -29,6 +29,7 @@ const invokeChaincode = async function(fcn, args) {
 	let chaincodeName = config.chaincode;
 	let userName = config.reqUserName;
 	let orgName = config.reqOrg;
+	
 	console.log(util.format('\n============ invoke transaction on channel %s ============\n', channelName));
 	try {
 		// first setup the client for this org
@@ -54,7 +55,7 @@ const invokeChaincode = async function(fcn, args) {
 			chainId: channelName,
 			txId: tx_id
 		};
-
+		console.log(request);
 		let results = await channel.sendTransactionProposal(request);
 
 		// the returned object has both the endorsement results

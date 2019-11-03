@@ -38,7 +38,7 @@ channels:
                 eventSource: false
 
         chaincodes:
-            - testnetCC:v0
+            - saficket:v0
 
 organizations:
     Org0:

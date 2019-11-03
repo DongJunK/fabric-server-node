@@ -1,24 +1,32 @@
 var express = require('express');
 var invoke = require('../safeticket_net/invoke');
+var query = require('../safeticket_net/query');
 var router = express.Router();
 
-const bcrypt = require('bcrypt');
 const { Ticket_platform } = require('../models');
 
 /* GET Inquiry one ticket info. */
 router.get('/info', async function (req, res) { // ticket_no
 	let ticket_code = req.query.ticket_code;
-
-	let args = "[\"" + ticket_code + "\"]";
+	let args = [ticket_code];
 	let fcn = "queryOneTicket";
 	if (!ticket_code) {
-		res.send({ result:false, msg: 'Not exist request query ticket_code' });
+		res.send({ result:false, info:'', msg: 'Not exist request query ticket_code' });
 		return;
 	}
 	try {
-		let message = await invoke.invokeChaincode(args, fcn);
+		let message = await query.queryChaincode(args, fcn);
 		console.log(message);
-		res.send({ result: true, info: message, msg: 'Success get info' });
+		let result;
+		let msg;
+		if(message){
+			result = true;
+			msg = 'Success get info';
+		}else{
+			result = false;
+			msg = 'Not exist ticket info';
+		}
+		res.send({ result: result, info: message, msg: msg });
 	} catch (err) {
 		console.error(err);
 		res.send({ result:false, info:'', msg:err });
@@ -29,16 +37,25 @@ router.get('/info', async function (req, res) { // ticket_no
 /* GET Inquiry ticket list of one user. */
 router.get('/list', async function (req, res) {
 	let attendee_id = req.query.attendee_id;
-	let args = "[\"" + attendee_id + "\"]";
+	let args = [attendee_id];
 	let fcn = "queryUserTickets";
 	if (!attendee_id) {
-		res.send({ result:false, msg: 'Not exist request query attendee_id' });
+		res.send({ result:false, list:'', msg: 'Not exist request query attendee_id' });
 		return;
 	}
 	try {
-		let message = await invoke.invokeChaincode(peer, args, fcn);
+		let message = await query.queryChaincode(args, fcn);
 		console.log(message);
-		res.send({ result: true, list: message, msg: 'Success get list' });
+		let result;
+		let msg;
+		if(message.length==2){
+			result = false;
+			msg = 'Not exist ticket of user';
+		}else {
+			result = true;
+			msg = 'Success get list';
+		}
+		res.send({ result: result, list: message, msg: msg });
 	} catch (err) {
 		console.error(err);
 		res.send({ result:false, list:'', msg:err });
@@ -48,7 +65,7 @@ router.get('/list', async function (req, res) {
 
 /* POST buy ticket  */
 router.post('/', async function (req, res) {
-	const token = req.header.authorization; // ticket sales platform authorization token
+	const token = req.headers.authorization; // ticket sales platform authorization token
 	const venue = req.body.venue; // ticket event venue
 	const event_date = req.body.event_date; // ticket event date
 	const event_time = req.body.event_time; // ticket event time
@@ -57,9 +74,9 @@ router.post('/', async function (req, res) {
 	const event_name = req.body.event_name; // event_name of Purchased Ticket
 	const attendee_id = req.body.attendee_id; // saficket user id
 	const ticket_code = attendee_id + event_name + payment_time; // generate ticket code
-
+	console.log(req.headers);
 	const fcn = "createNewTicket"; // blockchain buy ticket function name
-	const args = "[\"" + ticket_code + "\",\"" + attendee_id + "\",\"" + event_name + "\",\"" + venue + "\",\"" + event_date + "\",\"" + event_time + "\",\"" + ticket_issuer + "\"]"; // buy ticket request arguments
+	const args =[ticket_code, attendee_id, event_name, venue, event_date, event_time, ticket_issuer]; // buy ticket request arguments
 
 	try {
 		if (!token) {
@@ -103,10 +120,8 @@ router.post('/', async function (req, res) {
 			return;
 		}
 
-		let message = await invoke.invokeChaincode(peer, fcn, args);
-		var result = Buffer.alloc(11, message, 'base64'); // byte to string
-		console.log(message, result);
-		res.send({ result: result == "true", msg: 'Success buy ticket' }); // result string to boolean 
+		let message = await invoke.invokeChaincode(args,fcn);
+		res.send({ result: message.success, msg: 'Success buy ticket' }); // result string to boolean 
 	} catch (err) {
 		console.error(err);
 		res.send({ result:false, msg: err });
@@ -151,9 +166,8 @@ router.post('/deletion', async function (req, res) {
 
 
 		let message = await invoke.invokeChaincode(args, fcn);
-		var result = Buffer.alloc(11, message, 'base64'); // byte to string
-		console.log(message, result);
-		res.send({ result: result == "true", msg: 'Success delete ticket' }); // result string to boolean 
+		console.log(message);
+		res.send({ result: message.success, msg: 'Success delete ticket' }); // result string to boolean 
 	} catch (err) {
 		console.error(err);
 		res.send({ result:false, msg: err });

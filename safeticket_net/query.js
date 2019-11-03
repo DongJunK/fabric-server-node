@@ -17,14 +17,14 @@ var util = require('util');
 var helper = require('./helper.js');
 var config = require('./config.json');
 
-var queryChaincode = async function(peer, args, fcn) {
+var queryChaincode = async function(args, fcn) {
 	let client = null;
 	let channel = null;
 	let channelName = config.channel;
 	let chaincodeName = config.chaincode;
     let userName = config.reqUserName;
 	let orgName = config.reqOrg;
-	
+	let peer = config.org0peer;
     try {
 		// first setup the client for this org
 		// dongjun : remove username at getClientForOrg function parameter
@@ -50,15 +50,12 @@ var queryChaincode = async function(peer, args, fcn) {
 			fcn: fcn,
 			args: args
 		};
-
 		let response_payloads = await channel.queryByChaincode(request);
 		if (response_payloads) {
 			for (let i = 0; i < response_payloads.length; i++) {
-				console.log(args[0]+' now has ' + response_payloads[i].toString('utf8') +
-					' after the move');
+				console.log(response_payloads[i].toString('utf8'));
 			}
-			return args[0]+' now has ' + response_payloads[0].toString('utf8') +
-				' after the move';
+			return response_payloads[0].toString('utf8');
 		} else {
 			console.error('response_payloads is null');
 			return 'response_payloads is null';
