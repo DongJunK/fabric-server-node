@@ -34,6 +34,7 @@ router.get('/info', async function (req, res) { // ticket_code
 
 });
 
+
 /* GET Inquiry ticket list of one user. */
 router.get('/list', async function (req, res) {
 	let attendee_id = req.query.attendee_id;

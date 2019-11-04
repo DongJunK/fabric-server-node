@@ -11,6 +11,7 @@ router.post('/join',async function(req, res) {
 
     try{
         const exUser = await User.findOne({where: {email:email}});
+        console.log(exUser);
         if(exUser){
             res.send({result:false,msg:'exist'});
             return;
