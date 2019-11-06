@@ -4,8 +4,25 @@ var router = express.Router();
 const bcrypt = require('bcrypt');
 const { User } = require('../models');
 
+/* whether exist email : /users/email */
+router.post('/email',async function(req, res) {
+    const { email } = req.body;
 
-/* User Join : /app/users/join */
+    try{
+        const exUser = await User.findOne({where: {email:email}});
+        console.log(exUser);
+        if(exUser){
+            res.send({result:false,msg:'exist'});
+            return;
+        } 
+        res.send({result:true,msg:'success'});
+    }catch(error){
+        console.error(error);
+        res.send({result:false,msg:'error'});
+    }
+});
+
+/* User Join : /users/join */
 router.post('/join',async function(req, res) {
     const { email, password, name, phone_num} = req.body;
 
@@ -33,6 +50,7 @@ router.post('/join',async function(req, res) {
     }
 });
 
+// User Login : /users/login
 router.post('/login',async (req,res)=>{ // req.body.email, req.body.password
     try{
         var email = req.body.email;
