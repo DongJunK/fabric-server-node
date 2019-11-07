@@ -42,7 +42,7 @@ router.post('/update',async function(req, res){
 
             if(result){ // password true
                 const hash = bcrypt.hash(password,12); // password to hash
-                User.Update({
+                User.update({
                     password: hash,
                     name: name,
                     phone_num: phone_num
@@ -51,20 +51,18 @@ router.post('/update',async function(req, res){
                     res.send({result:true,msg:'success'});
                 })
                 .catch(function(){
-                    res.send({result:false,info:'',msg:'error'});
+                    res.send({result:false,msg:'error'});
                 });
-                res.send({result:true,msg:'success'});
-
             } else {
                 res.send({result:false, msg:'Abnormal approach'});
             }
         } else {
-            res.send({result:false,info:'',msg:'not exist email'});
+            res.send({result:false,msg:'not exist email'});
         }
         
      }catch(error){
         console.error(error);
-        res.send({result:false,info:'',msg:'error'});
+        res.send({result:false,msg:'error'});
      }
 });
 
@@ -81,7 +79,7 @@ router.post('/update/password',async function(req, res){
 
             if(result){ // name true
                 const hash = bcrypt.hash(password,12); // password to hash
-                User.Update({
+                User.update({
                     password:hash
                 },{where:{email:email}})
                 .then(function(){
@@ -180,6 +178,36 @@ router.post('/login',async function(req,res){ // req.body.email, req.body.passwo
         res.send({reuslt:false,msg:error});
     }
 });
+// user withdrawal 
+router.post('/withdrawl',async function(req, res){
+    const { email, password } = req.body;
 
+    try{
+        const exUser = await User.findOne({where: {email:email}});
+    
+        if(exUser){
+            // password check
+            const result = await bcrypt.compare(password, exUser.password);
+
+            if(result){ // password true
+                User.destory({where:{email:email}})
+                .then(function(){
+                    res.send({result:true,msg:'success'});
+                })
+                .catch(function(){
+                    res.send({result:false,msg:'error'});
+                });
+            } else {
+                res.send({result:false, msg:'Abnormal approach'});
+            }
+        } else {
+            res.send({result:false,msg:'not exist email'});
+        }
+        
+     }catch(error){
+        console.error(error);
+        res.send({result:false,info:'',msg:'error'});
+     }
+});
 
 module.exports = router;
