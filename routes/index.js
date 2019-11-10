@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 
+
 /* GET qr code page. */
 router.get('/qrcode', function(req, res) {
   const token = req.headers.authorization;

@@ -2,6 +2,7 @@ var express = require('express');
 var invoke = require('../safeticket_net/invoke');
 var query = require('../safeticket_net/query');
 var router = express.Router();
+var maketoken = require('../safeticket_net/maketoken');
 
 const { Ticket_platform } = require('../models');
 
@@ -19,12 +20,16 @@ router.get('/info', async function (req, res) { // ticket_code
 		console.log(message);
 		let result;
 		let msg;
-		if(message){
-			result = true;
-			msg = 'Success get info';
-		}else{
+		if(!message){
 			result = false;
 			msg = 'Not exist ticket info';
+		} else if (message[0] !=='{'){
+			maketoken();
+			result = false;
+			msg = 'Please retry';
+		} else {
+			result = true;
+			msg = 'Success get info';
 		}
 		res.send({ result: result, info: message, msg: msg });
 	} catch (err) {
@@ -52,7 +57,7 @@ router.get('/list', async function (req, res) {
 		if(message.length==2){
 			result = false;
 			msg = 'Not exist ticket of user';
-		}else {
+		} else {
 			result = true;
 			msg = 'Success get list';
 		}
@@ -78,7 +83,7 @@ router.post('/', async function (req, res) {
 	console.log(req.headers);
 	const fcn = "createNewTicket"; // blockchain buy ticket function name
 	const args =[ticket_code, attendee_id, event_name, venue, event_date, event_time, ticket_issuer]; // buy ticket request arguments
-
+	console.log(ticket_code);
 	try {
 		if (!token) {
 			res.send({ result:false, msg: 'Not exist request header authorization' });

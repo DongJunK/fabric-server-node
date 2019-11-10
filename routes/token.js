@@ -1,11 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+let router = express.Router();
+const makeToken = require('../safeticket_net/maketoken');
 
 const bcrypt = require('bcrypt');
 const { Ticket_platform } = require('../models');
 
 /* POST token create or show request */
-router.post('/', async function(req, res) {
+router.post('/platform', async function(req, res) {
     const { ticket_platform_name, contract_date } = req.body;
 
     try{
@@ -35,6 +36,18 @@ router.post('/', async function(req, res) {
         res.send({result:false,token:'',msg:error});
     }
 
+});
+
+// Register and enroll user
+router.post('/jwt',async function(req, res) {
+    var result = await makeToken();
+    if(result.success){
+      res.send({result:true});
+    } else {
+      res.send({result:false});
+      makeToken();
+    }
+    
 });
 
 module.exports = router;

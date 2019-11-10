@@ -68,7 +68,7 @@ router.post('/update',async function(req, res){
 
 // Reset user password
 router.post('/update/password',async function(req, res){
-    const { email, password, name } = req.body;
+    const { email, name } = req.body;
 
     try{
         const exUser = await User.findOne({where: {email:email}});
