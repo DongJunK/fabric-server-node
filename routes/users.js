@@ -183,10 +183,10 @@ router.post('/login',async function(req,res){ // req.body.email, req.body.passwo
 router.post('/update/check',async function(req,res){ // req.body.email, req.body.password
     try{
         var email = req.body.email;
-        var name = req.body.password;
+        var name = req.body.name;
         const exUser = await User.findOne({ where:{email:email,name:name}});
         if(exUser){ 
-            res.send({reuslt:true,msg:'success'});
+            res.send({result:true,msg:'success'});
         }else { // not exist email
             res.send({result:false, msg: 'The combination of email and name is incorrect.'});
         }
