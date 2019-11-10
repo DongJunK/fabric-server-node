@@ -68,7 +68,7 @@ router.post('/update',async function(req, res){
 
 // Reset user password
 router.post('/update/password',async function(req, res){
-    const { email, name } = req.body;
+    const { email, password, name } = req.body;
 
     try{
         const exUser = await User.findOne({where: {email:email}});
@@ -178,6 +178,24 @@ router.post('/login',async function(req,res){ // req.body.email, req.body.passwo
         res.send({reuslt:false,msg:error});
     }
 });
+
+// User Login : /users/login
+router.post('/update/check',async function(req,res){ // req.body.email, req.body.password
+    try{
+        var email = req.body.email;
+        var name = req.body.password;
+        const exUser = await User.findOne({ where:{email:email,name:name}});
+        if(exUser){ 
+            res.send({reuslt:true,msg:'success'});
+        }else { // not exist email
+            res.send({result:false, msg: 'The combination of email and name is incorrect.'});
+        }
+    }catch(error){
+        console.error(error);
+        res.send({reuslt:false,msg:error});
+    }
+});
+
 // user withdrawal 
 router.post('/withdrawl',async function(req, res){
     const { email, password } = req.body;
