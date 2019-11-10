@@ -8,9 +8,9 @@ const { User } = require('../models');
 // Query user info
 router.post('/',async function(req, res){
    const { email, password } = req.body;
+   console.log(email, password);
    try{
         const exUser = await User.findOne({where: {email:email}});
-        console.log(exUser);
         if(exUser){
             // password check
             const result = await bcrypt.compare(password, exUser.password);
@@ -35,22 +35,22 @@ router.post('/update',async function(req, res){
 
     try{
         const exUser = await User.findOne({where: {email:email}});
-        console.log(exUser);
         if(exUser){
             // password check
             const result = await bcrypt.compare(previous_password, exUser.password);
 
             if(result){ // password true
-                const hash = bcrypt.hash(password,12); // password to hash
+                const hash = await bcrypt.hash(password,12); // password to hash
                 User.update({
-                    password: hash,
-                    name: name,
-                    phone_num: phone_num
+                    password:hash,
+                    name,
+                    phone_num
                 },{where:{email:email}})
                 .then(function(){
                     res.send({result:true,msg:'success'});
                 })
-                .catch(function(){
+                .catch(function(err){
+                    console.log(err);
                     res.send({result:false,msg:'error'});
                 });
             } else {
@@ -78,7 +78,7 @@ router.post('/update/password',async function(req, res){
             const result = compare(name, exUser.name);
 
             if(result){ // name true
-                const hash = bcrypt.hash(password,12); // password to hash
+                const hash = await bcrypt.hash(password,12); // password to hash
                 User.update({
                     password:hash
                 },{where:{email:email}})
@@ -179,7 +179,7 @@ router.post('/login',async function(req,res){ // req.body.email, req.body.passwo
     }
 });
 
-// User Login : /users/login
+// User email name check : /users/update/check
 router.post('/update/check',async function(req,res){ // req.body.email, req.body.password
     try{
         var email = req.body.email;
@@ -197,7 +197,7 @@ router.post('/update/check',async function(req,res){ // req.body.email, req.body
 });
 
 // user withdrawal 
-router.post('/withdrawl',async function(req, res){
+router.post('/withdrawal',async function(req, res){
     const { email, password } = req.body;
 
     try{
@@ -208,7 +208,7 @@ router.post('/withdrawl',async function(req, res){
             const result = await bcrypt.compare(password, exUser.password);
 
             if(result){ // password true
-                User.destory({where:{email:email}})
+                User.destroy({where:{email:email}})
                 .then(function(){
                     res.send({result:true,msg:'success'});
                 })
