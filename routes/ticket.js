@@ -71,7 +71,7 @@ router.get('/list', async function (req, res) {
 
 /* POST buy ticket  */
 router.post('/', async function (req, res) {
-	const token = req.headers.authorization; // ticket sales platform authorization token
+	const token = req.body.authorization; // ticket sales platform authorization token
 	const venue = req.body.venue; // ticket event venue
 	const event_date = req.body.event_date; // ticket event date
 	const event_time = req.body.event_time; // ticket event time
@@ -137,7 +137,7 @@ router.post('/', async function (req, res) {
 
 /* DELETE ticket at blockchain*/
 router.post('/deletion', async function (req, res) {
-	let token = req.headers.authorization; // ticket sales platform authorization token
+	let token = req.body.authorization; // ticket sales platform authorization token
 	let payment_time = req.body.payment_time; // ticket payment time
 	let event_name = req.body.event_name; // event_name of Purchased Ticket
 	let attendee_id = req.body.attendee_id; // saficket user id
