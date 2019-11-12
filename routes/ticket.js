@@ -79,11 +79,10 @@ router.post('/', async function (req, res) {
 	const payment_time = req.body.payment_time; // ticket payment time
 	const event_name = req.body.event_name; // event_name of Purchased Ticket
 	const attendee_id = req.body.attendee_id; // saficket user id
-	const ticket_code = attendee_id + event_name + payment_time; // generate ticket code
-	console.log(req.headers);
+	const ticket_code = attendee_id + payment_time; // generate ticket code
 	const fcn = "createNewTicket"; // blockchain buy ticket function name
 	const args =[ticket_code, attendee_id, event_name, venue, event_date, event_time, ticket_issuer]; // buy ticket request arguments
-	console.log(ticket_code);
+
 	try {
 		if (!token) {
 			res.send({ result:false, msg: 'Not exist request header authorization' });
