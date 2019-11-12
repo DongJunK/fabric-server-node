@@ -20,7 +20,9 @@ const user = (sequelize, DataTypes)=>{
     },{
         underscored: true,
         timestamps: false,
-        freezeTableName: true
+        freezeTableName: true,
+        charset:'utf8',
+        collate:'utf8_general_ci'
     });
 };
 
