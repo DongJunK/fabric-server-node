@@ -38,7 +38,7 @@ channels:
                 eventSource: false
 
         chaincodes:
-            - saficket:v0
+            - saficket
 
 organizations:
     Org0:
