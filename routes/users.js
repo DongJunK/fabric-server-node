@@ -19,9 +19,10 @@ router.post('/',async function(req, res){
             } else {
                 res.send({result:false,info:'', msg:'Abnormal approach'});
             }
+        } else {
+            //not exist email
+            res.send({result:false,info:'',msg:'not exist email'});
         }
-        //not exist email
-        res.send({result:false,info:'',msg:'not exist email'});
     }catch(error){
         console.error(error);
         res.send({result:false,info:'',msg:'error'});
