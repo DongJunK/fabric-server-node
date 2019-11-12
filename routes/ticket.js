@@ -136,7 +136,6 @@ router.post('/', async function (req, res) {
 router.post('/deletion', async function (req, res) {
 	let token = req.body.authorization; // ticket sales platform authorization token
 	let payment_time = req.body.payment_time; // ticket payment time
-	let event_name = req.body.event_name; // event_name of Purchased Ticket
 	let attendee_id = req.body.attendee_id; // saficket user id
 	let ticket_code = attendee_id + payment_time; // generate ticket code
 	let args = "[\"" + ticket_code + "\"]";
@@ -158,10 +157,6 @@ router.post('/deletion', async function (req, res) {
 			res.send({ result:false, msg: 'Not exist request body payment_time' });
 			return;
 		}
-		if(!event_name) {
-			res.send({ result:false, msg: 'Not exist request body event_name' });
-			return;
-		}
 		if(!attendee_id) {
 			res.send({ result:false, msg: 'Not exist request body attendee_id' });
 			return;
@@ -169,7 +164,6 @@ router.post('/deletion', async function (req, res) {
 
 
 		let message = await invoke.invokeChaincode(args, fcn);
-		console.log(message);
 		res.send({ result: message.success, msg: 'Success delete ticket' }); // result string to boolean 
 	} catch (err) {
 		console.error(err);
