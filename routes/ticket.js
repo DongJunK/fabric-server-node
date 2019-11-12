@@ -138,7 +138,7 @@ router.post('/deletion', async function (req, res) {
 	let payment_time = req.body.payment_time; // ticket payment time
 	let attendee_id = req.body.attendee_id; // saficket user id
 	let ticket_code = attendee_id + payment_time; // generate ticket code
-	let args = "[\"" + ticket_code + "\"]";
+	let args = [ticket_code];
 	let fcn = "deleteTicket";
 	try {
 		if(!token){
