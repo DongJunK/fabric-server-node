@@ -12,7 +12,6 @@ require('./config.js');
 require('dotenv').config();
 
 
-var indexRouter = require('./routes/index');
 var ticketRouter = require('./routes/ticket');
 var tokenRouter = require('./routes/token');
 var userRouter = require('./routes/users');
@@ -47,7 +46,6 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
 app.use('/ticket',ticketRouter);
 app.use('/token',tokenRouter);
 app.use('/users',userRouter);

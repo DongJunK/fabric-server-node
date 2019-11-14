@@ -17,7 +17,6 @@ router.post('/platform', async function(req, res) {
                 res.send({result:true,token:ticket_platform.token,msg:'Successfully get token'});
             } else {
                 const hash = await bcrypt.hash(JSON.stringify(ticket_platform), 12);
-                console.log(hash);
                 Ticket_platform.update({token:hash},{where: {name:ticket_platform_name,contract_date:contract_date}})
                 
                 .then(() =>{

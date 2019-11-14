@@ -55,7 +55,6 @@ const invokeChaincode = async function(args, fcn) {
 			chainId: channelName,
 			txId: tx_id
 		};
-		console.log(request);
 		let results = await channel.sendTransactionProposal(request);
 
 		// the returned object has both the endorsement results
@@ -108,7 +107,6 @@ const invokeChaincode = async function(args, fcn) {
 							reject(new Error(message));
 						} else {
 							let message = 'The invoke chaincode transaction was valid.';
-							console.log(message);
 							resolve(message);
 						}
 					}, (err) => {

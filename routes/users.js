@@ -8,7 +8,6 @@ const { User } = require('../models');
 // Query user info
 router.post('/',async function(req, res){
    const { email, password } = req.body;
-   console.log(email, password);
    try{
         const exUser = await User.findOne({where: {email:email}});
         if(exUser){
@@ -73,7 +72,6 @@ router.post('/update/password',async function(req, res){
 
     try{
         const exUser = await User.findOne({where: {email:email}});
-        console.log(exUser);
         if(exUser){
             // name check
             const result = compare(name, exUser.name);
@@ -109,7 +107,7 @@ router.post('/email',async function(req, res) {
 
     try{
         const exUser = await User.findOne({where: {email:email}});
-        console.log(exUser);
+
         if(exUser){ // exist email
             res.send({result:false,msg:'exist'});
             return;
@@ -123,26 +121,44 @@ router.post('/email',async function(req, res) {
     }
 });
 
+/* whether exist sns_id : /users/sns_id */
+router.post('/sns_id',async function(req, res) {
+    const { sns_id } = req.body;
+    try{
+        const exUser = await User.findOne({where: {sns_id:sns_id}});
+        if(exUser){ // exist email
+            res.send({result:true,info:{email:exUser.email,password:exUser.password,name:exUser.name},msg:'exist'});
+            return;
+        } else {
+            res.send({result:false,info:'',msg:'not exist'});
+        }
+        
+    }catch(error){
+        res.send({result:false,info:'',msg:'error'});
+    }
+});
+
 /* User Join : /users/join */
 router.post('/join',async function(req, res) {
-    const { email, password, name, phone_num} = req.body;
-
+    const { email, sns_id, password, name, phone_num} = req.body;
+    const exUser;
     try{
-        const exUser = await User.findOne({where: {email:email}});
-        console.log(exUser);
+        exUser = await User.findOne({where: {email:email}});
+        
         if(exUser){
             res.send({result:false,msg:'exist'});
             return;
         } 
-        console.time('암호화시간');
         const hash = await bcrypt.hash(password, 12); // password to hash
-        console.timeEnd('암호화시간');
-        
+        if(sns_id === undefined){
+            sns_id = null;
+        }
         // insert User
         await User.create({ 
             email,
             password: hash,
             name,
+            sns_id,
             phone_num
         })
         .then(function() { // success

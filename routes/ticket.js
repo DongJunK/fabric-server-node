@@ -17,7 +17,6 @@ router.get('/info', async function (req, res) { // ticket_code
 	}
 	try {
 		let message = await query.queryChaincode(args, fcn);
-		console.log(message);
 		let result;
 		let msg;
 		if(!message){
@@ -50,7 +49,6 @@ router.get('/list', async function (req, res) {
 	}
 	try {
 		let message = await query.queryChaincode(args, fcn);
-		console.log(message);
 		let result;
 		let msg;
 		if(message.length==2){
@@ -122,7 +120,6 @@ router.post('/', async function (req, res) {
 			res.send({ result:false, msg: 'Not exist request body attendee_id' });
 			return;
 		}
-		console.log(args);
 		let message = await invoke.invokeChaincode(args,fcn);
 		res.send({ result: message.success, msg: 'Success buy ticket' }); // result string to boolean 
 	} catch (err) {
