@@ -141,18 +141,16 @@ router.post('/sns_id',async function(req, res) {
 /* User Join : /users/join */
 router.post('/join',async function(req, res) {
     const { email, sns_id, password, name, phone_num} = req.body;
-    let exUser;
+    
     try{
-        exUser = await User.findOne({where: {email:email}});
+        const exUser = await User.findOne({where: {email:email}});
         
         if(exUser){
             res.send({result:false,msg:'exist'});
             return;
         } 
         const hash = await bcrypt.hash(password, 12); // password to hash
-        if(sns_id === undefined){
-            sns_id = null;
-        }
+        
         // insert User
         await User.create({ 
             email,
