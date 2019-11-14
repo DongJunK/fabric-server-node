@@ -141,7 +141,7 @@ router.post('/sns_id',async function(req, res) {
 /* User Join : /users/join */
 router.post('/join',async function(req, res) {
     const { email, sns_id, password, name, phone_num} = req.body;
-    const exUser;
+    let exUser;
     try{
         exUser = await User.findOne({where: {email:email}});
         
