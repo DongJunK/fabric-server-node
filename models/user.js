@@ -4,7 +4,11 @@ const user = (sequelize, DataTypes)=>{
             type: DataTypes.STRING(40),
             allowNull: false,
             primaryKey: true
-        }, 
+        },
+        sns_id:{
+            type: DataTypes.STRING(50),
+            allowNull: true
+        },
         password:{
             type: DataTypes.STRING(300),
             allowNull: false
