@@ -121,23 +121,6 @@ router.post('/email',async function(req, res) {
     }
 });
 
-/* whether exist sns_id : /users/sns_id */
-router.post('/sns_id',async function(req, res) {
-    const { sns_id } = req.body;
-    try{
-        const exUser = await User.findOne({where: {sns_id:sns_id}});
-        if(exUser){ // exist email
-            res.send({result:true,info:{email:exUser.email,password:exUser.password,name:exUser.name},msg:'exist'});
-            return;
-        } else {
-            res.send({result:false,info:'',msg:'not exist'});
-        }
-        
-    }catch(error){
-        res.send({result:false,info:'',msg:'error'});
-    }
-});
-
 /* User Join : /users/join */
 router.post('/join',async function(req, res) {
     const { email, sns_id, password, name, phone_num} = req.body;
@@ -176,7 +159,15 @@ router.post('/login',async function(req,res){ // req.body.email, req.body.passwo
     try{
         var email = req.body.email;
         var password = req.body.password;
-        const exUser = await User.findOne({ where:{email}});
+        var sns_id = req.body.sns_id;
+        let exUser;
+        if(sns_id === undefined){
+            exUser = await User.findOne({ where:{email}});
+        }else{
+            exUser = await User.findOne({where: {sns_id:sns_id}});
+            password = exUser.password;
+        }
+        
         if(exUser){ // exist email
             // password check
             const result = await bcrypt.compare(password, exUser.password);
