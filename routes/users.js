@@ -165,17 +165,21 @@ router.post('/login',async function(req,res){ // req.body.email, req.body.passwo
             exUser = await User.findOne({ where:{email}});
         }else{
             exUser = await User.findOne({where: {sns_id:sns_id}});
-            password = exUser.password;
         }
-        
+
         if(exUser){ // exist email
             // password check
-            const result = await bcrypt.compare(password, exUser.password);
-            if(result){ // password true
-                res.send({result:true,msg:'success login'});
-            } else {
-                res.send({result:false, msg:'The combination of email and password is incorrect.'});
+            if(sns_id === undefined){
+                const result = await bcrypt.compare(password, exUser.password);
+                if(result){ // password true
+                    res.send({result:true,info:{email:exUser.email,password:password,name:exUser.name},msg:'success login'});
+                }else{
+                    res.send({result:false,info:'', msg:'The combination of email and password is incorrect.'});
+                }
+            }else{
+                res.send({result:true,info:{email:exUser.email,password:exUser.password,name:exUser.name},msg:'success sns login'});
             }
+            
         }else { // not exist email
             res.send({result:false, msg: 'The combination of email and password is incorrect.'});
         }
