@@ -10,7 +10,7 @@ client:
     organization: Org0
 
     credentialStore:
-        path: "./fabric-client-kv-org0"
+        path: "/home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/fabric-client-kv-org0"
 
         cryptoStore:
             path: "/tmp/fabric-client-kv-org0"

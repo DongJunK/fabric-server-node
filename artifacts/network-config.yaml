@@ -52,10 +52,10 @@ organizations:
             - ca-org0
 
         adminPrivateKey:
-            path: artifacts/crypto-config/peerOrganizations/org0.example.com/users/Admin@org0.example.com/msp/keystore/c058122b0740f7130ac8d1bfb07361bf2115e4498028602fac12b3deddba921e_sk
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/peerOrganizations/org0.example.com/users/Admin@org0.example.com/msp/keystore/c058122b0740f7130ac8d1bfb07361bf2115e4498028602fac12b3deddba921e_sk
         
         signedCert:
-            path: artifacts/crypto-config/peerOrganizations/org0.example.com/users/Admin@org0.example.com/msp/signcerts/Admin@org0.example.com-cert.pem
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/peerOrganizations/org0.example.com/users/Admin@org0.example.com/msp/signcerts/Admin@org0.example.com-cert.pem
 
     Org1:
         mspid: Org1MSP
@@ -68,10 +68,10 @@ organizations:
             - ca-org1
 
         adminPrivateKey:
-            path: artifacts/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/23c14d8afa36ac72ae058b450dd82ebd042f654f94b919861ae8ae7761424ca8_sk
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/23c14d8afa36ac72ae058b450dd82ebd042f654f94b919861ae8ae7761424ca8_sk
 
         signedCert:
-            path: artifacts/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
 
 orderers:
     orderer0.example.com:
@@ -81,7 +81,7 @@ orderers:
             ssl-target-name-override: orderer0.example.com
 
         tlsCACerts:
-            path: artifacts/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/ca.crt
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/ordererOrganizations/example.com/orderers/orderer0.example.com/tls/ca.crt
     
     orderer1.example.com:
         url: grpcs://15.164.187.242:7050
@@ -90,7 +90,7 @@ orderers:
             ssl-target-name-override: orderer1.example.com
 
         tlsCACerts:
-            path: artifacts/crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/ca.crt
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/ca.crt
 
     orderer2.example.com:
         url: grpcs://13.209.27.139:7050
@@ -99,7 +99,7 @@ orderers:
             ssl-target-name-override: orderer2.example.com
 
         tlsCACerts:
-            path: artifacts/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/ca.crt
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/ca.crt
 
 peers:
     peer0.org0.example.com:
@@ -108,7 +108,7 @@ peers:
         grpcOptions:
             ssl-target-name-override: peer0.org0.example.com
         tlsCACerts:
-            path: artifacts/crypto-config/peerOrganizations/org0.example.com/peers/peer0.org0.example.com/tls/ca.crt
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/peerOrganizations/org0.example.com/peers/peer0.org0.example.com/tls/ca.crt
 
     peer1.org0.example.com:
         url: grpcs://13.209.61.41:7051
@@ -116,7 +116,7 @@ peers:
         grpcOptions:
             ssl-target-name-override: peer1.org0.example.com
         tlsCACerts:
-            path: artifacts/crypto-config/peerOrganizations/org0.example.com/peers/peer1.org0.example.com/tls/ca.crt
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/peerOrganizations/org0.example.com/peers/peer1.org0.example.com/tls/ca.crt
 
     peer0.org1.example.com:
         url: grpcs://15.164.153.125:7051
@@ -124,7 +124,7 @@ peers:
         grpcOptions:
             ssl-target-name-override: peer0.org1.example.com
         tlsCACerts:
-            path: crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 
     peer1.org1.example.com:
         url: grpcs://15.164.121.13:7051
@@ -132,7 +132,7 @@ peers:
         grpcOptions:
             ssl-target-name-override: peer1.org1.example.com
         tlsCACerts:
-            path: artifacts/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt
     
 certificateAuthorities:
     ca-org0:
@@ -142,7 +142,7 @@ certificateAuthorities:
         httpOptions:
             verify: false
         tlsCACerts:
-            path: artifacts/crypto-config/peerOrganizations/org0.example.com/ca/ca.org0.example.com-cert.pem
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/peerOrganizations/org0.example.com/ca/ca.org0.example.com-cert.pem
 
         # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
         # needed to enroll and invoke new users.
@@ -157,7 +157,7 @@ certificateAuthorities:
         httpOptions:
             verify: false
         tlsCACerts:
-            path: artifacts/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+            path: /home/ubuntu/p1034_swing-1/fabric-server-node-saficket/artifacts/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
         registrar:
             - enrollId: admin
               enrollSecret: adminpw
